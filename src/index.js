@@ -11,15 +11,18 @@ const port = process.env.PORT || 3000;
 const publicDirectoryPath = path.join(__dirname, '../public');
 app.use(express.static(publicDirectoryPath));
 
-let count = 0;
-
 io.on('connection', socket => {
   console.log('New web socket connection');
-  socket.emit('countUpdated', count);
-  socket.on('increment', () => {
-    count = count + 1;
-    // socket.emit('countUpdated', count); // emits data to this single connection that is connected to the server
-    io.emit('countUpdated', count); // emits data to all connections available to that server
+  // socket.emit('countUpdated', count);
+  // socket.on('increment', () => {
+  //   count = count + 1;
+  //   // socket.emit('countUpdated', count); // emits data to this single connection that is connected to the server
+  //   io.emit('countUpdated', count); // emits data to all connections available to that server
+  // });
+
+  socket.emit('message', 'Welcome!');
+  socket.on('sendMessage', message => {
+    io.emit('message', message);
   });
 });
 
