@@ -38,7 +38,7 @@ io.on('connection', socket => {
   // listens for sendLocation event and broadcasts that location to the other users connected to this server
   socket.on('sendLocation', (coords, callback) => {
     io.emit(
-      'message',
+      'locationMessage',
       `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
     );
     callback();
