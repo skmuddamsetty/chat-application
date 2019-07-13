@@ -22,8 +22,18 @@ io.on('connection', socket => {
   //   io.emit('countUpdated', count); // emits data to all connections available to that server
   // });
 
-  socket.emit('message', generateMessage('Welcome!'));
-  socket.broadcast.emit('message', generateMessage('A new user has joined')); // emits data to all connections available to that server except the current user
+  // socket.emit('message', generateMessage('Welcome!'));
+  // socket.broadcast.emit('message', generateMessage('A new user has joined')); // emits data to all connections available to that server except the current user
+
+  //listener for join action from client
+  socket.on('join', ({ username, roomname }) => {
+    socket.join(roomname);
+    socket.emit('message', generateMessage('Welcome!'));
+    socket.broadcast
+      .to(roomname)
+      .emit('message', generateMessage(`${username}' has joined!`));
+  });
+  // listener for send message action from client
   socket.on('sendMessage', (message, callback) => {
     const filter = new Filter();
     if (filter.isProfane(message)) {
