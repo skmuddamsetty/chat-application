@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
+const { generateMessage } = require('./utils/messages');
 
 const app = express();
 const server = http.createServer(app);
@@ -21,19 +22,19 @@ io.on('connection', socket => {
   //   io.emit('countUpdated', count); // emits data to all connections available to that server
   // });
 
-  socket.emit('message', 'Welcome!');
-  socket.broadcast.emit('message', 'A new user has joined'); // emits data to all connections available to that server except the current user
+  socket.emit('message', generateMessage('Welcome!'));
+  socket.broadcast.emit('message', generateMessage('A new user has joined')); // emits data to all connections available to that server except the current user
   socket.on('sendMessage', (message, callback) => {
     const filter = new Filter();
     if (filter.isProfane(message)) {
       return callback('Profanity is not allowed');
     }
-    io.emit('message', message);
+    io.emit('message', generateMessage(message));
     callback(); // this is going to acknowledge the client that the server has received the message
   });
   // executed when a user disconnects from the server
   socket.on('disconnect', () => {
-    io.emit('message', 'A user has left');
+    io.emit('message', generateMessage('A user has left'));
   });
   // listens for sendLocation event and broadcasts that location to the other users connected to this server
   socket.on('sendLocation', (coords, callback) => {
