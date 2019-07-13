@@ -14,5 +14,7 @@ socket.on('message', message => {
 
 document.querySelector('#message-form').addEventListener('submit', e => {
   e.preventDefault();
-  socket.emit('sendMessage', document.querySelector('input').value);
+  // const message = document.querySelector('input').value;
+  const message = e.target.elements.message.value;
+  socket.emit('sendMessage', message);
 });
