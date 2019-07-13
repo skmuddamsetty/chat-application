@@ -25,8 +25,16 @@ io.on('connection', socket => {
   socket.on('sendMessage', message => {
     io.emit('message', message);
   });
+  // executed when a user disconnects from the server
   socket.on('disconnect', () => {
     io.emit('message', 'A user has left');
+  });
+  // listens for sendLocation event and broadcasts that location to the other users connected to this server
+  socket.on('sendLocation', coords => {
+    io.emit(
+      'message',
+      `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
   });
 });
 
